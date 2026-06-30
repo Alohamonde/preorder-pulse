@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:dev.sqlite"
+}
+
+model Session {
+  id                  String    @id
+  shop                String
+  state               String
+  isOnline            Boolean   @default(false)
+  scope               String?
+  expires             DateTime?
+  accessToken         String
+  userId              BigInt?
+  firstName           String?
+  lastName            String?
+  email               String?
+  accountOwner        Boolean   @default(false)
+  locale              String?
+  collaborator        Boolean?  @default(false)
+  emailVerified       Boolean?  @default(false)
+  refreshToken        String?
+  refreshTokenExpires DateTime?
+}
+
+model ShopSettings {
+  id                  String   @id @default(cuid())
+  shop                String   @unique
+  enabled             Boolean  @default(true)
+  autoPreorderOnZero  Boolean  @default(false)
+  notifyButtonText    String   @default("到货通知我")
+  preorderButtonText  String   @default("立即预售")
+  notifySuccessText   String   @default("已加入等候名单，补货后第一时间通知您")
+  barBgColor          String   @default("#f3f4f6")
+  barTextColor        String   @default("#111827")
+  barAccentColor      String   @default("#2563eb")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model PreorderRule {
+  id                  String   @id @default(cuid())
+  shop                String
+  productId           String
+  productTitle        String   @default("")
+  variantId           String
+  variantTitle        String   @default("")
+  sellingPlanGroupId  String   @default("")
+  depositPercent      Float    @default(100)
+  fulfillmentDate     String   @default("")
+  triggerMode         String   @default("manual")
+  inventoryPolicy     String   @default("ON_SALE")
+  enabled             Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([shop])
+  @@index([shop, variantId])
+}
+
+model WaitlistSubscriber {
+  id          String    @id @default(cuid())
+  shop        String
+  email       String
+  productId   String
+  variantId   String
+  productTitle String @default("")
+  variantTitle String @default("")
+  status      String    @default("pending")
+  notifiedAt  DateTime?
+  convertedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([shop, variantId, email])
+  @@index([shop, status])
+  @@index([shop, variantId])
+}
+
+model NotificationJob {
+  id           String    @id @default(cuid())
+  shop         String
+  subscriberId String
+  variantId    String
+  email        String
+  status       String    @default("pending")
+  sentAt       DateTime?
+  errorMessage String    @default("")
+  createdAt    DateTime  @default(now())
+
+  @@index([shop, status])
+}
+
+model PreorderEvent {
+  id        String   @id @default(cuid())
+  shop      String
+  eventType String
+  ruleId    String?
+  createdAt DateTime @default(now())
+
+  @@index([shop, eventType])
+}

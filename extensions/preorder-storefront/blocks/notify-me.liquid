@@ -1,0 +1,22 @@
+{% schema %}
+{
+  "name": "Notify Me (Back in Stock)",
+  "target": "section",
+  "stylesheet": "preorder-storefront.css",
+  "javascript": "preorder-storefront.js",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "缺货且非预售时展示「到货通知我」邮箱表单。补货后通过 inventory webhook 自动通知订阅者。"
+    }
+  ]
+}
+{% endschema %}
+
+<div
+  class="pp-storefront pp-storefront__hidden"
+  data-pp-mount
+  data-pp-mode="notify"
+  data-pp-product-id="{{ product.id | prepend: 'gid://shopify/Product/' }}"
+  data-pp-product-title="{{ product.title | escape }}"
+></div>

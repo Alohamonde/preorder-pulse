@@ -1,0 +1,53 @@
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "Preorder Pulse"
+client_id = ""
+application_url = "https://shopify.dev/apps/default-app-home"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+include_config_on_deploy = true
+
+[access_scopes]
+scopes = "read_products,write_products,read_inventory,read_orders,write_selling_plans,read_selling_plans"
+
+[shop.metafields.app.preorder_pulse]
+type = "json"
+name = "Preorder Pulse Config"
+description = "Storefront preorder rules and waitlist settings"
+
+  [shop.metafields.app.preorder_pulse.access]
+  admin = "merchant_read_write"
+  storefront = "public_read"
+
+[app_proxy]
+url = "/apps/preorder-pulse"
+subpath = "preorder-pulse"
+prefix = "apps"
+
+[webhooks]
+api_version = "2026-04"
+
+  [[webhooks.subscriptions]]
+  topics = ["app/uninstalled"]
+  uri = "/webhooks/app/uninstalled"
+
+  [[webhooks.subscriptions]]
+  topics = ["app/scopes_update"]
+  uri = "/webhooks/app/scopes_update"
+
+  [[webhooks.subscriptions]]
+  topics = ["inventory_levels/update"]
+  uri = "/webhooks/inventory_levels/update"
+
+  [[webhooks.subscriptions]]
+  topics = ["orders/paid"]
+  uri = "/webhooks/orders/paid"
+
+  [[webhooks.subscriptions]]
+  topics = ["products/update"]
+  uri = "/webhooks/products/update"
+
+[auth]
+redirect_urls = ["https://shopify.dev/apps/default-app-home/api/auth"]

@@ -1,0 +1,22 @@
+{% schema %}
+{
+  "name": "Preorder Button",
+  "target": "section",
+  "stylesheet": "preorder-storefront.css",
+  "javascript": "preorder-storefront.js",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "当变体处于预售模式时展示预售信息与预计发货日。请在 App 后台创建预售规则。"
+    }
+  ]
+}
+{% endschema %}
+
+<div
+  class="pp-storefront pp-storefront__hidden"
+  data-pp-mount
+  data-pp-mode="preorder"
+  data-pp-product-id="{{ product.id | prepend: 'gid://shopify/Product/' }}"
+  data-pp-product-title="{{ product.title | escape }}"
+></div>
